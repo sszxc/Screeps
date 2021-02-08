@@ -13,8 +13,8 @@ module.exports.loop = function () {
 
     // creeps 数量控制
     var harvesters_num = 2;
-    var upgraders_num = 1;
-    var builders_num = 5;
+    var upgraders_num = 2;
+    var builders_num = 2;
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');    
