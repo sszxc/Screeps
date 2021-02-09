@@ -17,3 +17,8 @@
 # 命令笔记
 设置建筑工地
 `Game.spawns['Spawn1'].room.createConstructionSite(42, 32, STRUCTURE_EXTENSION);`
+`Game.spawns['Spawn1'].room.createConstructionSite(39, 32, STRUCTURE_ROAD);`
+
+# TODO
+
+- [ ] 高等级Creeps
