@@ -13,8 +13,8 @@ module.exports.loop = function () {
 
     // creeps 数量控制
     var harvesters_num = 2;
-    var upgraders_num = 4;
-    var builders_num = 2;
+    var upgraders_num = 2;
+    var builders_num = 3;
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');    
@@ -26,23 +26,29 @@ module.exports.loop = function () {
         // harvesters 补充
         if (harvesters.length < harvesters_num) {
             var newName = 'Harvester' + Game.time;
-            console.log('Spawning new harvester: ' + newName);
-            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
-                { memory: { role: 'harvester', task: 'harvest' } });
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
+                { memory: { role: 'harvester', task: 'harvest' } })
+                == OK) {
+                console.log('Spawning new harvester: ' + newName);
+            }
         }
         // upgraders 补充
-        if (upgraders.length < upgraders_num) { 
+        if (upgraders.length < upgraders_num) {
             var newName = 'Upgrader' + Game.time;
-            console.log('Spawning new upgrader: ' + newName);
-            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
-                { memory: { role: 'upgrader', task: 'harvest' } });
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
+                { memory: { role: 'upgrader', task: 'harvest' } })
+                == OK) {
+                console.log('Spawning new upgrader: ' + newName);
+            }
         }
         // builders 补充
-        if (builders.length < builders_num) { 
+        if (builders.length < builders_num) {
             var newName = 'Builder' + Game.time;
-            console.log('Spawning new builder: ' + newName);
-            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
-                { memory: { role: 'builder', task: 'harvest' } });
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
+                { memory: { role: 'builder', task: 'harvest' } })
+                == OK) {
+                console.log('Spawning new builder: ' + newName);
+            }
         }
     }
     

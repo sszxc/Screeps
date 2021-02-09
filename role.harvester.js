@@ -16,7 +16,7 @@ var roleHarvester = {
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
             }
-            creep.say('🔄 harvest');
+            // creep.say('🔄 harvest');
         }
         else {
             var targets = creep.room.find(FIND_STRUCTURES, {
@@ -32,7 +32,7 @@ var roleHarvester = {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
             }
-            creep.say('🚚 transfer');
+            // creep.say('🚚 transfer');
         }
     }
 };
