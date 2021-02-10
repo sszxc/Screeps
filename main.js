@@ -18,10 +18,38 @@ module.exports.loop = function () {
         }
     }
 
+    // Tower 控制
+    var tower = Game.getObjectById('60238efe0995b1ecc3dc604d');
+    if (tower) {
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if (closestHostile) { // 进攻
+            tower.attack(closestHostile);
+            // 增加 denfender
+        }
+        else { // 治疗
+            var target = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
+                filter: function (object) {
+                    return object.hits < object.hitsMax;
+                }
+            });
+            if (target) {
+                tower.heal(target);
+            }
+            else { // 维修       
+                var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => structure.hits < structure.hitsMax
+                });
+                if (closestDamagedStructure) {
+                    tower.repair(closestDamagedStructure);
+                }
+            }
+        }
+    }
+
     // creeps 数量控制
-    var harvesters_num = 2; // 定点采集，memory.task=12 分别针对两个矿
-    var carriers_num = 1; // 搬运工
-    var upgraders_num = 4; // 升级
+    var harvesters_num = 2; // 定点采集
+    var carriers_num = 2; // 搬运工
+    var upgraders_num = 3; // 升级
     var builders_num = 2; // 建造
     var repairers_num = 2; // 维修
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
@@ -37,7 +65,7 @@ module.exports.loop = function () {
         // harvesters 补充
         if (harvesters.length < harvesters_num) {
             var newName = 'Harvester' + Game.time;
-            var newtask = '1'; // 分配矿点
+            var newtask = '1'; // 分配矿点 memory.task=12 分别针对两个矿
             if (harvesters[0]) {
                 if (harvesters[0].memory.task == '1') {
                     newtask = '2';
@@ -61,7 +89,7 @@ module.exports.loop = function () {
         // upgraders 补充
         if (upgraders.length < upgraders_num) {
             var newName = 'Upgrader' + Game.time;
-            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE], newName,
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE], newName,
                 { memory: { role: 'upgrader', task: 'harvest' } })
                 == OK) {
                 console.log('Spawning new upgrader: ' + newName);

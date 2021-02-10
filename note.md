@@ -7,6 +7,7 @@
 [Screeps 中文 API 文档](https://screeps-cn.gitee.io/api/)
 
 ## 工具
+
 [Creep Calculator](https://screepspl.us/services/creep-calculator/)
 
 ## 大佬
@@ -19,17 +20,24 @@
 
 [Screeps 游玩指北 趣味的吃](https://www.jianshu.com/p/9c4425531cc7)
 
-# 环境配置
+# 笔记
+
+## 环境配置
 
 [Screeps 使用 VSCode 进行开发并添加自动补全](https://www.jianshu.com/p/5603d0c486b1)
 
 然后 打开游戏代码存放目录，执行如下命令安装声明文件 ：
-`npm install @types/screeps @types/lodash@3.10.1`
+```
+npm install @types/screeps @types/lodash@3.10.1
+```
 
-# 命令笔记
-设置建筑工地
-`Game.spawns['Spawn1'].room.createConstructionSite(42, 32, STRUCTURE_EXTENSION);`
-`Game.spawns['Spawn1'].room.createConstructionSite(39, 32, STRUCTURE_ROAD);`
+## 常见命令
+
+设置建筑工地可以使用上方快捷图标“Construct”，或者使用以下代码：
+```
+Game.spawns['Spawn1'].room.createConstructionSite(42, 32, STRUCTURE_EXTENSION);
+Game.spawns['Spawn1'].room.createConstructionSite(39, 32, STRUCTURE_ROAD);
+```
 
 # TODO
 

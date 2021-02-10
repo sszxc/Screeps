@@ -12,13 +12,16 @@ var roleUpgrader = {
         }
 
         if (creep.memory.task == "upgrade") { // 升级控制器
-            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+            if (creep.pos.inRangeTo(creep.room.controller, 1)) { // 靠近 防止堵路
+                creep.upgradeController(creep.room.controller);
+            }
+            else {
                 creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#ffffff' } });
             }
             // creep.say('⚡ upgrade');
         }
         else { // 收集能量
-            const target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES); // 先找掉在地上的能量
+            var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES); // 先找掉在地上的能量
             if (target) {
                 if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } });

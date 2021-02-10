@@ -12,7 +12,7 @@ var roleRepairer = {
         }
 
         if (creep.memory.task == "harvest") { //收集能量
-            const target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES); // 先找掉在地上的能量
+            var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES); // 先找掉在地上的能量
             if (target) {
                 if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } });
@@ -32,7 +32,7 @@ var roleRepairer = {
             }
             // creep.say('🔄 harvest');
         }
-        else { // 检索生命值最低的建筑
+        else { // 按照生命值检索建筑
             const targets = creep.room.find(FIND_STRUCTURES, {
                 filter: object => object.hits < object.hitsMax
             });
