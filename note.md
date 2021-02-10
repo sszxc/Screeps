@@ -1,11 +1,23 @@
 # 教程文档
-[API 文档](https://docs.screeps.com/api/)
+
+## 官方
 
 [Screeps 官方中文文档](https://screeps-cn.gitee.io/index.html)
 
+[Screeps 中文 API 文档](https://screeps-cn.gitee.io/api/)
+
+## 工具
+[Creep Calculator](https://screepspl.us/services/creep-calculator/)
+
+## 大佬
+
 [Screep 中文教程目录 HoPGoldy](https://www.jianshu.com/p/5431cb7f42d3)
 
-[Screeps 进阶技巧](https://zhuanlan.zhihu.com/p/104412058)
+[Screeps 进阶技巧 Scorpior](https://zhuanlan.zhihu.com/p/104412058)
+
+[Screeps入门教程0·机制 笨熊之家](https://twodam.net/Tutorial-for-Screeps-0)
+
+[Screeps 游玩指北 趣味的吃](https://www.jianshu.com/p/9c4425531cc7)
 
 # 环境配置
 
@@ -21,4 +33,4 @@
 
 # TODO
 
-- [ ] 高等级Creeps
+- [ ] 

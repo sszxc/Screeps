@@ -1,4 +1,5 @@
 var roleHarvester = require('role.harvester');
+var roleCarrier = require('role.carrier');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 
@@ -12,10 +13,12 @@ module.exports.loop = function () {
     }    
 
     // creeps 数量控制
-    var harvesters_num = 2;
+    var harvesters_num = 2; // 定点采集，memory.task=12 分别针对两个矿
+    var carriers_num = 2; // 搬运工
     var upgraders_num = 2;
-    var builders_num = 3;
+    var builders_num = 2;
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+    var carriers = _.filter(Game.creeps, (creep) => creep.memory.role == 'carrier');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');    
     // console.log('Harvesters: ' + harvesters.length + '/' + harvesters_num
@@ -26,16 +29,31 @@ module.exports.loop = function () {
         // harvesters 补充
         if (harvesters.length < harvesters_num) {
             var newName = 'Harvester' + Game.time;
-            if (Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
-                { memory: { role: 'harvester', task: 'harvest' } })
+            var newtask = '1'; // 分配矿点
+            if (harvesters[0]) {
+                if (harvesters[0].memory.task == '1') {
+                    newtask = '2';
+                }
+            }                
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, MOVE], newName,
+                { memory: { role: 'harvester', task: newtask } })
                 == OK) {
                 console.log('Spawning new harvester: ' + newName);
+            }
+        }
+        // carriers 补充
+        if (carriers.length < carriers_num) {
+            var newName = 'Carrier' + Game.time;
+            if (Game.spawns['Spawn1'].spawnCreep([CARRY, CARRY, MOVE, MOVE], newName,
+                { memory: { role: 'carrier', task: 'harvest' } })
+                == OK) {
+                console.log('Spawning new carrier: ' + newName);
             }
         }
         // upgraders 补充
         if (upgraders.length < upgraders_num) {
             var newName = 'Upgrader' + Game.time;
-            if (Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE, MOVE], newName,
                 { memory: { role: 'upgrader', task: 'harvest' } })
                 == OK) {
                 console.log('Spawning new upgrader: ' + newName);
@@ -44,7 +62,7 @@ module.exports.loop = function () {
         // builders 补充
         if (builders.length < builders_num) {
             var newName = 'Builder' + Game.time;
-            if (Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE, MOVE], newName,
                 { memory: { role: 'builder', task: 'harvest' } })
                 == OK) {
                 console.log('Spawning new builder: ' + newName);
@@ -57,6 +75,9 @@ module.exports.loop = function () {
         var creep = Game.creeps[name];
         if (creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
+        }
+        else if (creep.memory.role == 'carrier') {
+            roleCarrier.run(creep);
         }
         else if (creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);
