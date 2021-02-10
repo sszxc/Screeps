@@ -11,19 +11,28 @@ var roleRepairer = {
             creep.say('🛠 repair');
         }
 
-        if (creep.memory.task == "harvest") {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return structure.structureType == STRUCTURE_CONTAINER &&
-                        structure.store[RESOURCE_ENERGY] > 0;
+        if (creep.memory.task == "harvest") { //收集能量
+            const target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES); // 先找掉在地上的能量
+            if (target) {
+                if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } });
                 }
-            });
-            if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+            }
+            else { // 然后找 container
+                var targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return structure.structureType == STRUCTURE_CONTAINER &&
+                            structure.store[RESOURCE_ENERGY] > 0;
+                    }
+                });
+                targets.sort((a, b) => b.store[RESOURCE_ENERGY] - a.store[RESOURCE_ENERGY]); // 排序
+                if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+                }
             }
             // creep.say('🔄 harvest');
         }
-        else {
+        else { // 检索生命值最低的建筑
             const targets = creep.room.find(FIND_STRUCTURES, {
                 filter: object => object.hits < object.hitsMax
             });
@@ -32,7 +41,7 @@ var roleRepairer = {
 
             if (targets.length > 0) {
                 if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
+                    creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
             }
             // creep.say('🛠 repair');

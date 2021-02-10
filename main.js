@@ -5,20 +5,25 @@ var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
 
 module.exports.loop = function () { 
+    // 测试命令
+    if (1) {
+        
+    }
+
     // 清理垃圾
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }
-    }    
+    }
 
     // creeps 数量控制
     var harvesters_num = 2; // 定点采集，memory.task=12 分别针对两个矿
     var carriers_num = 1; // 搬运工
-    var upgraders_num = 2; // 升级
-    var builders_num = 1; // 建造
-    var repairers_num = 4; // 维修
+    var upgraders_num = 4; // 升级
+    var builders_num = 2; // 建造
+    var repairers_num = 2; // 维修
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var carriers = _.filter(Game.creeps, (creep) => creep.memory.role == 'carrier');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
@@ -47,7 +52,7 @@ module.exports.loop = function () {
         // carriers 补充
         if (carriers.length < carriers_num) {
             var newName = 'Carrier' + Game.time;
-            if (Game.spawns['Spawn1'].spawnCreep([CARRY, CARRY, MOVE, MOVE], newName,
+            if (Game.spawns['Spawn1'].spawnCreep([CARRY, CARRY, MOVE], newName,
                 { memory: { role: 'carrier', task: 'harvest' } })
                 == OK) {
                 console.log('Spawning new carrier: ' + newName);
