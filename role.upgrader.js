@@ -4,18 +4,18 @@ var roleUpgrader = {
         // 状态切换
         if (creep.memory.task == "upgrade" && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.task = "harvest";
-            // creep.say('🔄 harvest');
+            creep.say('🔄 harvest');
         }
         else if (creep.memory.task == "harvest" && creep.store.getFreeCapacity() == 0) {
             creep.memory.task = "upgrade";
-            // creep.say('⚡ upgrade');
+            creep.say('⚡ upgrade');
         }
 
         if (creep.memory.task == "upgrade") {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#ffffff' } });
             }
-            creep.say('⚡ upgrade');
+            // creep.say('⚡ upgrade');
         }
         else {
             var targets = creep.room.find(FIND_STRUCTURES, {
