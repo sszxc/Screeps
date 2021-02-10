@@ -15,10 +15,10 @@ module.exports.loop = function () {
 
     // creeps 数量控制
     var harvesters_num = 2; // 定点采集，memory.task=12 分别针对两个矿
-    var carriers_num = 2; // 搬运工
+    var carriers_num = 1; // 搬运工
     var upgraders_num = 2; // 升级
     var builders_num = 1; // 建造
-    var repairers_num = 3; // 维修
+    var repairers_num = 4; // 维修
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var carriers = _.filter(Game.creeps, (creep) => creep.memory.role == 'carrier');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
