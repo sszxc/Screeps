@@ -22,7 +22,7 @@ var roleUpgrader = {
         }
         else { // 收集能量
             var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES); // 先找掉在地上的能量
-            if (target) {
+            if (0 && target) { // upgrader 不捡地上的
                 if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } });
                 }

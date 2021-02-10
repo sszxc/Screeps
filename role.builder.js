@@ -18,13 +18,11 @@ var roleBuilder = {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#6699ff' } });
                 }
             }
-            else { // 没事做就维修
+            else { // 没事做就维修 不修路
                 const targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: object => object.hits < object.hitsMax
+                    filter: object => object.hits < object.hitsMax && object.structureType != STRUCTURE_ROAD
                 });
-
                 targets.sort((a, b) => a.hits - b.hits); // 排序
-
                 if (targets.length > 0) {
                     if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
@@ -35,7 +33,7 @@ var roleBuilder = {
         }
         else { // 收集能量
             var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES); // 先找掉在地上的能量
-            if (target) {
+            if (0 && target) { // builder 不捡地上的
                 if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } });
                 }

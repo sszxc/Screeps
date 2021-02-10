@@ -6,7 +6,7 @@ var roleRepairer = require('role.repairer');
 
 module.exports.loop = function () { 
     // 测试命令
-    if (1) {
+    if (0) {
         
     }
 
@@ -19,7 +19,7 @@ module.exports.loop = function () {
     }
 
     // Tower 控制
-    var tower = Game.getObjectById('60238efe0995b1ecc3dc604d');
+    var tower = Game.getObjectById('6023a0bfc66e4d3f9ad557d8');
     if (tower) {
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) { // 进攻
@@ -35,9 +35,10 @@ module.exports.loop = function () {
             if (target) {
                 tower.heal(target);
             }
-            else { // 维修       
+            else { // 维修 但是不刷墙
                 var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => structure.hits < structure.hitsMax
+                    filter: (structure) => structure.hits < structure.hitsMax &&
+                        structure.structureType != STRUCTURE_WALL
                 });
                 if (closestDamagedStructure) {
                     tower.repair(closestDamagedStructure);
@@ -48,8 +49,8 @@ module.exports.loop = function () {
 
     // creeps 数量控制
     var harvesters_num = 2; // 定点采集
-    var carriers_num = 2; // 搬运工
-    var upgraders_num = 3; // 升级
+    var carriers_num = 3; // 搬运工
+    var upgraders_num = 4; // 升级
     var builders_num = 2; // 建造
     var repairers_num = 2; // 维修
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
@@ -80,7 +81,7 @@ module.exports.loop = function () {
         // carriers 补充
         if (carriers.length < carriers_num) {
             var newName = 'Carrier' + Game.time;
-            if (Game.spawns['Spawn1'].spawnCreep([CARRY, CARRY, MOVE], newName,
+            if (Game.spawns['Spawn1'].spawnCreep([CARRY, CARRY, CARRY, CARRY, MOVE, MOVE], newName,
                 { memory: { role: 'carrier', task: 'harvest' } })
                 == OK) {
                 console.log('Spawning new carrier: ' + newName);
@@ -98,7 +99,7 @@ module.exports.loop = function () {
         // builders 补充
         if (builders.length < builders_num) {
             var newName = 'Builder' + Game.time;
-            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE], newName,
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE], newName,
                 { memory: { role: 'builder', task: 'harvest' } })
                 == OK) {
                 console.log('Spawning new builder: ' + newName);
