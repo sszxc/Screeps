@@ -3,6 +3,7 @@ var roleCarrier = require('role.carrier');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
+var roleDefender = require('role.defender');
 
 module.exports.loop = function () { 
     // 战时状态
@@ -32,27 +33,34 @@ module.exports.loop = function () {
                 return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
             }
         });
-        // var s = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS); // 仅距离最近
         if (closestHostiles) { // 进攻
             closestHostiles.sort((a, b) => a.pos.getRangeTo(tower) - b.pos.getRangeTo(tower));
             tower.attack(closestHostiles[0]);
+            console.log('Tower attack aggressive hostile creeps!')
         }
-        else { // 治疗
-            var target = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
-                filter: function (object) {
-                    return object.hits < object.hitsMax;
-                }
-            });
-            if (target) {
-                tower.heal(target);
+        else {
+            var s = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS); // 仅距离最近
+            if (s) { // 清理其他的
+                tower.attack(s);
+                console.log('Tower attack hostile creeps!')
             }
-            else { // 维修 但是不刷墙
-                var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => structure.hits < structure.hitsMax &&
-                        structure.structureType != STRUCTURE_WALL
+            else { // 治疗
+                var target = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
+                    filter: function (object) {
+                        return object.hits < object.hitsMax;
+                    }
                 });
-                if (closestDamagedStructure) {
-                    tower.repair(closestDamagedStructure);
+                if (target) {
+                    tower.heal(target);
+                }
+                else { // 维修 但是不刷墙
+                    var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (structure) => structure.hits < structure.hitsMax &&
+                            structure.structureType != STRUCTURE_WALL
+                    });
+                    if (closestDamagedStructure) {
+                        tower.repair(closestDamagedStructure);
+                    }
                 }
             }
         }
@@ -60,15 +68,17 @@ module.exports.loop = function () {
 
     // creeps 数量控制
     var harvesters_num = 2; // 定点采集
-    var carriers_num = 3; // 搬运工
-    var upgraders_num = 4; // 升级
-    var builders_num = 3; // 建造
-    var repairers_num = 2; // 维修
+    var carriers_num = 2; // 搬运工
+    var upgraders_num = 1; // 升级
+    var builders_num = 0;//4; // 建造
+    var repairers_num = 0;//3; // 维修
+    var defenders_num = 2; // 防守
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var carriers = _.filter(Game.creeps, (creep) => creep.memory.role == 'carrier');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');    
+    var defenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'defender');    
     // console.log('Harvesters: ' + harvesters.length + '/' + harvesters_num
     //     + '  Upgraders: ' + upgraders.length + '/' + upgraders_num
     //     + '  Builders: ' + builders.length + '/' + builders_num);
@@ -123,6 +133,15 @@ module.exports.loop = function () {
                 { memory: { role: 'repairer', task: 'harvest' } })
                 == OK) {
                 console.log('Spawning new repairer: ' + newName);
+            }
+        }
+        // defenders 补充
+        if (defenders.length < defenders_num) {
+            var newName = 'Defender' + Game.time;
+            if (Game.spawns['Spawn1'].spawnCreep([ATTACK, ATTACK, HEAL, HEAL, MOVE, MOVE], newName,
+                { memory: { role: 'defender' } })
+                == OK) {
+                console.log('Spawning new defender: ' + newName);
             }
         }
     }
