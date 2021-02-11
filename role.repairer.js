@@ -34,7 +34,9 @@ var roleRepairer = {
         }
         else { // 按照生命值检索建筑 不修路
             const targets = creep.room.find(FIND_STRUCTURES, {
-                filter: object => object.hits < object.hitsMax && object.structureType != STRUCTURE_ROAD
+                filter: object => object.hits < object.hitsMax &&
+                    (object.structureType == STRUCTURE_WALL ||
+                        object.structureType == STRUCTURE_RAMPART)
             });
             targets.sort((a, b) => a.hits - b.hits); // 排序
             if (targets.length > 0) {

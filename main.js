@@ -5,11 +5,17 @@ var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
 
 module.exports.loop = function () { 
-    // 测试命令
-    if (0) {
-        
-    }
-
+    // 战时状态
+    var enemy = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS, {
+        filter: function (object) {
+            return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) != 0;
+        }
+    });
+    var war_state = enemy.length; // 非零即有敌人
+    // 增加 denfender
+    // 调整不同角色执行任务
+    // upgrader、builder、repairer 都只刷墙
+    
     // 清理垃圾
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
@@ -21,10 +27,15 @@ module.exports.loop = function () {
     // Tower 控制
     var tower = Game.getObjectById('6023a0bfc66e4d3f9ad557d8');
     if (tower) {
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) { // 进攻
-            tower.attack(closestHostile);
-            // 增加 denfender
+        var closestHostiles = tower.room.find(FIND_HOSTILE_CREEPS, { // 寻找最近的有进攻能力的
+            filter: function (object) {
+                return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
+            }
+        });
+        // var s = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS); // 仅距离最近
+        if (closestHostiles) { // 进攻
+            closestHostiles.sort((a, b) => a.pos.getRangeTo(tower) - b.pos.getRangeTo(tower));
+            tower.attack(closestHostiles[0]);
         }
         else { // 治疗
             var target = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
@@ -51,7 +62,7 @@ module.exports.loop = function () {
     var harvesters_num = 2; // 定点采集
     var carriers_num = 3; // 搬运工
     var upgraders_num = 4; // 升级
-    var builders_num = 2; // 建造
+    var builders_num = 3; // 建造
     var repairers_num = 2; // 维修
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var carriers = _.filter(Game.creeps, (creep) => creep.memory.role == 'carrier');
@@ -72,7 +83,7 @@ module.exports.loop = function () {
                     newtask = '2';
                 }
             }                
-            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, MOVE], newName,
+            if (Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, WORK, WORK, MOVE], newName,
                 { memory: { role: 'harvester', task: newtask } })
                 == OK) {
                 console.log('Spawning new harvester: ' + newName);
@@ -115,8 +126,8 @@ module.exports.loop = function () {
             }
         }
     }
-    
-    // 执行任务
+
+    // 分配任务
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
         if (creep.memory.role == 'harvester') {

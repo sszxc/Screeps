@@ -16,7 +16,7 @@
 
 [Screeps 进阶技巧 Scorpior](https://zhuanlan.zhihu.com/p/104412058)
 
-[Screeps入门教程0·机制 笨熊之家](https://twodam.net/Tutorial-for-Screeps-0)
+[Screeps 入门教程 0·机制 笨熊之家](https://twodam.net/Tutorial-for-Screeps-0)
 
 [Screeps 游玩指北 趣味的吃](https://www.jianshu.com/p/9c4425531cc7)
 
@@ -41,4 +41,4 @@ Game.spawns['Spawn1'].room.createConstructionSite(39, 32, STRUCTURE_ROAD);
 
 # TODO
 
-- [ ] Tower
+- [ ] Defender 逻辑

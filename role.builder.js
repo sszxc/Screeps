@@ -18,9 +18,9 @@ var roleBuilder = {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#6699ff' } });
                 }
             }
-            else { // 没事做就维修 不修路
+            else { // 没事做就维修
                 const targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: object => object.hits < object.hitsMax && object.structureType != STRUCTURE_ROAD
+                    filter: object => object.hits < object.hitsMax
                 });
                 targets.sort((a, b) => a.hits - b.hits); // 排序
                 if (targets.length > 0) {
